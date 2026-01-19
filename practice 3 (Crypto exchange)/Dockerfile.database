@@ -1,0 +1,24 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    g++ \
+    make \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY main.cpp .
+COPY server.cpp .
+COPY server.h .
+COPY database/ ./database/
+COPY cmake-build-debug/schema.json .
+
+RUN g++ -std=c++17 -pthread -o database_server main.cpp server.cpp \
+    database/database.cpp database/table.cpp database/parsing.cpp \
+    database/filework.cpp database/hashchain.cpp \
+    -I./database/include
+    
+ #экспонирование порта
+EXPOSE 7432
+
+CMD ["./database_server"]

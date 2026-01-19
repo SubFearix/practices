@@ -1,0 +1,14 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir --trusted-host pypi.org --trusted-host files.pythonhosted.org flask
+
+COPY server.py .
+COPY database_client.py .
+COPY models.py .
+COPY config.json .
+
+EXPOSE 5000
+
+CMD ["python", "server.py"]
